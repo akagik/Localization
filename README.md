@@ -1,5 +1,11 @@
 Unity で言語ローカライズをするためのプロジェクト.
 
+### Requirements
+- python3
+- Generic レポジトリ
+
+### Install
+
 ```
 cd project_root
 python3 Assets/Localization/Editor/extract_localization.py .
