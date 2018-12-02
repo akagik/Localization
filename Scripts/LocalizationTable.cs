@@ -7,7 +7,7 @@ using UnityEditor;
 
 public class LocalizationTable : ScriptableObject
 {
-    public LocalizationData[] rows;
+    public List<LocalizationData> rows;
 
 #if UNITY_EDITOR
     [MenuItem("Assets/Create/Kohei/LocalizationTable")]
