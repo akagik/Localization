@@ -4,94 +4,89 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class LocalizationManager
+public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
 {
-    public bool isReady { get; private set; }
+    [SerializeField] LocalizationTable[] tables;
+    [SerializeField] string defaultLanguage;
+    [SerializeField] bool setDefaultLanguageOnAwake;
+    [ReadOnly, SerializeField] private string usingLanguage = "ja";
+    private Dictionary<string,string> cachedData;
 
-    public SystemLanguage DefaultLang = SystemLanguage.English;
+    private new void Awake() {
+        base.Awake();
 
-    public bool enforce;
-    public SystemLanguage enforceLanguage;
-
-    public SystemLanguage useLanguage
-    {
-        get
-        {
-            if (enforce)
-            {
-                return enforceLanguage;
-            }
-            else
-            {
-                return Application.systemLanguage;
-            }
+        if (setDefaultLanguageOnAwake) {
+            SetLanguage(defaultLanguage);
         }
     }
 
-    // [ReadOnly]
-    public SystemLanguage usingLanguage;
-
-    private Dictionary<string, string> localizedText;
-
-    private string missingTextString = "Localized text not found";
-
-    public static string GetCode(SystemLanguage lang)
+    /// <summary>
+    /// 例) ja, en, zh-cn(簡体字), zh-tw(繁体字), ko など
+    /// </summary>
+    public void SetLanguage(string languageCode)
     {
-        switch (lang)
-        {
-            case SystemLanguage.Japanese:
-                return "ja";
-            case SystemLanguage.Korean:
-                return "ko";
-            case SystemLanguage.Chinese:
-            case SystemLanguage.ChineseSimplified:
-            case SystemLanguage.ChineseTraditional:
-                return "zh";
-            case SystemLanguage.English:
-            default:
-                return "en";
-        }
+        usingLanguage = languageCode;
+        MakeCache(languageCode);
     }
 
-    public void LoadLocalizedText(SystemLanguage lang)
+    public bool ContainsKey(string key)
     {
-        this.usingLanguage = lang;
-
-        localizedText = new Dictionary<string, string>();
-
-        // foreach (LocalizationKey key in Enum.GetValues(typeof(LocalizationKey)))
-        // {
-        //     localizedText.Add(keyStr, value);
-        // }
-
-        isReady = true;
-        Debug.Log("Data loaded, dictionary contains: " + localizedText.Count + " entries : " + lang);
-    }
-
-    public bool Contains(string key)
-    {
-        checkReady();
-        return localizedText.ContainsKey(key);
+        Check();
+        return cachedData.ContainsKey(key);
     }
 
     public string Get(string key)
     {
-        checkReady();
-
-        if (localizedText.ContainsKey(key))
-        {
-            return localizedText[key];
-        }
-        return null;
+        Check();
+        return cachedData[key];
     }
 
-    private void checkReady()
+    public bool TryGetValue(string key,out string value)
     {
-        if (!isReady)
+        Check();
+        return cachedData.TryGetValue(key,out value);
+    }
+
+    private void Check()
+    {
+        if(cachedData == null)
         {
-            isReady = true;
-            LoadLocalizedText(useLanguage);
+            MakeCache(usingLanguage);
         }
+    }
+
+    private void MakeCache(string languageCode)
+    {
+        cachedData = new Dictionary<string,string>();
+
+        foreach(LocalizationTable table in tables)
+        {
+            foreach(LocalizationData data in table.rows)
+            {
+                if(cachedData.ContainsKey(data.key))
+                {
+                    cachedData[data.key] = GetText(data,languageCode);
+                }
+                else
+                {
+                    cachedData.Add(data.key,GetText(data,languageCode));
+                }
+            }
+        }
+    }
+
+    private string GetText(LocalizationData data,string languageCode)
+    {
+        switch(languageCode)
+        {
+            case "ja":
+                return data.ja;
+            case "en":
+                return data.en;
+            default:
+                break;
+        }
+        Debug.LogErrorFormat("指定の言語コードは存在しません: {0}",languageCode);
+        return "";
     }
 }
