@@ -1,30 +1,19 @@
-Unity で言語ローカライズをするためのプロジェクト.
+# Localization
 
-### Requirements
-- python3
-- Generic レポジトリ
+Unity で言語ローカライズをするためのモジュール.
+現段階でサポートしている言語は以下の通り:
+- en
+- ja
 
-### Install
+## Requirements
+- Generic
+- TMPro
+- Odin
 
-```
-cd project_root
-python3 Assets/Localization/Editor/extract_localization.py .
-```
 
-1. ローカリゼーションをするためには *PROJECT_ROOT*/Assets/Editor/Localization 以下に csv ファイルを用意する.
-csv ファイルの 1行目は KEY,TYPE,en,ja,ko,zh のようにする.
-TYPE には "Header", "Content" のいずれかをいれる。デフォルトは Header になる.
-Localization フォルダ以下の全ての .csv ファイルが対象となる.
+## How To Use
+1. シーンに LocalizationManager をアタッチしたゲームオブジェクトを配置する.
+2. LocalizationTable スクリプタブルオブジェクトをプロジェクト内に作成する.
+3. LocalizationManager.tables に 2 で作成したアセットをセットする.
+4. ゲーム開始時に LocalizationManager.SetLanguage を呼び出す.
 
-2. *PROJECT_ROOT*/Assets/Resources/Localization/en などに各言語で使われるフォントファイルを置く。
-フォントファイル名は contentFont と headerFont にする。
-特定の言語のフォントファイルがない場合はデフォルト言語のフォントファイルを使用する。
-少なくともデフォルト言語にはフォントファイルを置く必要がある。
-
-3. Editor/PyTools にディレクトリを移動し python3 extract_localization.py *PROJECT_ROOT* を実行する。
-これにより *PROJECT_ROOT*/Assets/Resources/Localization/en などに strings.txt ファイルが自動生成される。
-
-フォルダ構成
-* *PROJECT_ROOT*/Localization
-* *PROJECT_ROOT*/Editor/Localization
-* *PROJECT_ROOT*/Resources/Localization
