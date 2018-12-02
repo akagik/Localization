@@ -4,18 +4,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
+
 public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
 {
     [SerializeField] LocalizationTable[] tables;
-    [SerializeField] string defaultLanguage;
-    [SerializeField] bool setDefaultLanguageOnAwake;
+
+    public bool setDefaultLanguageOnAwake;
+
+#if ODIN_INSPECTOR
+    [ShowIf("setDefaultLanguageOnAwake")]
+#endif
+    public string defaultLanguage;
+
     [ReadOnly, SerializeField] private string usingLanguage = "ja";
     private Dictionary<string,string> cachedData;
 
-    private new void Awake() {
+    private new void Awake()
+    {
         base.Awake();
 
-        if (setDefaultLanguageOnAwake) {
+        if(setDefaultLanguageOnAwake)
+        {
             SetLanguage(defaultLanguage);
         }
     }
@@ -89,4 +101,5 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         Debug.LogErrorFormat("指定の言語コードは存在しません: {0}",languageCode);
         return "";
     }
+
 }
