@@ -53,6 +53,12 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         return cachedData[key];
     }
 
+    public string Format(string key, params object[] args)
+    {
+        Check();
+        return string.Format(cachedData[key], args);
+    }
+
     public bool TryGetValue(string key,out string value)
     {
         Check();
@@ -95,6 +101,8 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
                 return data.ja;
             case "en":
                 return data.en;
+            case "zh-cn":
+                return data.zh_cn;
             default:
                 break;
         }
