@@ -71,7 +71,7 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
     public string Format(string key, params object[] args)
     {
         Check();
-        return string.Format(cachedData[key], args);
+        return SmartFormat.Smart.Format(cachedData[key], args);
     }
 
     public bool TryGetValue(string key,out string value)
