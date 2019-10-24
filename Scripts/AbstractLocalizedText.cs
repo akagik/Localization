@@ -23,6 +23,10 @@ public abstract class AbstractLocalizedText : MonoBehaviour
     {
         if(setOnStart)
         {
+            if (!LocalizationManager.Instance.ContainsKey(key)) {
+                Debug.LogError("指定のキーは存在しない: " + key + ", GameObject.name: " + gameObject.name);
+                return;
+            }
             UpdateText();
         }
     }
