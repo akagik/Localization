@@ -52,6 +52,21 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         Check();
         return cachedData[key];
     }
+    
+    /// <summary>
+    /// key が存在しないときは, defaultVal を返す.
+    /// </summary>
+    public string Get(string key, string defaultVal)
+    {
+        Check();
+        
+        if (TryGetValue(key, out var value))
+        {
+            return value;
+        }
+
+        return defaultVal;
+    }
 
     public string Format(string key, params object[] args)
     {
