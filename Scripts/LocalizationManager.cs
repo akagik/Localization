@@ -19,7 +19,11 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
 #endif
     public string defaultLanguage;
 
-    [ReadOnly, SerializeField] private string usingLanguage = "ja";
+    [ReadOnly, SerializeField]
+    private string _usingLanguage = "ja";
+
+    public string usingLangCode => _usingLanguage;
+
     private Dictionary<string,string> cachedData;
 
     private new void Awake()
@@ -37,7 +41,7 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
     /// </summary>
     public void SetLanguage(string languageCode)
     {
-        usingLanguage = languageCode;
+        _usingLanguage = languageCode;
         MakeCache(languageCode);
     }
 
@@ -84,7 +88,7 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
     {
         if(cachedData == null)
         {
-            MakeCache(usingLanguage);
+            MakeCache(_usingLanguage);
         }
     }
 
