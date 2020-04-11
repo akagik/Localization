@@ -54,6 +54,14 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
     public string Get(string key)
     {
         Check();
+        
+#if UNITY_EDITOR
+        if (!cachedData.ContainsKey(key))
+        {
+            Debug.LogError("No key found: " + key);
+            return "no text";
+        }
+#endif
         return cachedData[key];
     }
     
