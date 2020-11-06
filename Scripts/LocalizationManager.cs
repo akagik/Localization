@@ -92,6 +92,32 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         return cachedData.TryGetValue(key,out value);
     }
 
+    public Sprite GetSprite(string key)
+    {
+        Check();
+
+        Sprite sprite = null;
+
+        if (cachedData.TryGetValue(key, out string value))
+        {
+            sprite = LoadSprite(value);
+        }
+
+        return sprite;
+    }
+
+    public Sprite GetSprite(string key, Sprite defaultSprite)
+    {
+        Sprite sprite = GetSprite(key);
+
+        if (sprite == null)
+        {
+            sprite = defaultSprite;
+        }
+
+        return sprite;
+    }
+
     private void Check()
     {
         if(cachedData == null)
@@ -137,4 +163,15 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         return "";
     }
 
+    public static Sprite LoadSprite(string path)
+    {
+        if (path == "")
+        {
+            return null;
+        }
+
+        var asset = Resources.Load<Sprite>(path);
+
+        return asset;
+    }
 }
