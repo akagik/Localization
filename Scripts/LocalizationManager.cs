@@ -36,6 +36,11 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
         }
     }
 
+    public LocalizationTable[] GetAllTables()
+    {
+        return tables;
+    }
+
     /// <summary>
     /// 例) ja, en, zh-cn(簡体字), zh-tw(繁体字), ko など
     /// </summary>
@@ -154,6 +159,8 @@ public class LocalizationManager : SingletonMonoBehaviour<LocalizationManager>
                 return data.ja;
             case "en":
                 return data.en;
+            case "ko":
+                return data.ko;
             case "zh-cn":
                 return data.zh_cn;
             default:
